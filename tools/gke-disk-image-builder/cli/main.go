@@ -58,6 +58,7 @@ func main() {
 	gcpOAuth := flag.String("gcp-oauth", "", "path to GCP service account credential file")
 	imagePullAuth := flag.String("image-pull-auth", "None", "auth mechanism to pull the container image, valid values: [None, ServiceAccountToken].\nNone means that the images are publically available and no authentication is required to pull them.\nServiceAccountToken means the service account oauth token will be used to pull the images.\nFor more information refer to https://cloud.google.com/compute/docs/access/authenticate-workloads#applications")
 	timeout := flag.String("timeout", "20m", "Default timout for each step, defaults to 20m")
+	networkProject := flag.String("network-project", "", "name of a gcp project for network")
 	network := flag.String("network", "default", "VPC network to be used by GCE resources used for disk image creation.")
 	subnet := flag.String("subnet", "default", "subnet to be used by GCE resources used for disk image creation.")
 	storeSnapshotCheckSum := flag.Bool("store-snapshot-checksum", true, "calculate and store checksums of every snapshot directory.")
@@ -111,8 +112,8 @@ func main() {
 		DiskType:              *diskType,
 		DiskSizeGB:            *diskSizeGb,
 		GCPOAuth:              *gcpOAuth,
-		Network:               fmt.Sprintf("projects/%s/global/networks/%s", *projectName, *network),
-		Subnet:                fmt.Sprintf("projects/%s/regions/%s/subnetworks/%s", *projectName, regionForZone(*zone), *subnet),
+		Network:               fmt.Sprintf("projects/%s/global/networks/%s", *networkProject, *network),
+		Subnet:                fmt.Sprintf("projects/%s/regions/%s/subnetworks/%s", *networkProject, regionForZone(*zone), *subnet),
 		ContainerImages:       containerImages,
 		Timeout:               td,
 		ImagePullAuth:         auth,
